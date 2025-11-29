@@ -22,7 +22,10 @@ const BlogSchema = new mongoose.Schema({
     required: true,
   },
   date: String,
-  category: String,
+  category: {
+    type: String,
+    required: true,
+  },
   blogText: [
     {
       title: {

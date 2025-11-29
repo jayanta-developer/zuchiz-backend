@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-const Blog = require("../Module/blog");
+const Blog = require("../../Module/Blog");
 import { validateRequiredFields } from "../../Util/validate"
 
 export const createBlog = async (req: Request, res: Response) => {
@@ -7,6 +7,7 @@ export const createBlog = async (req: Request, res: Response) => {
     const requiredFields = [
       "title",
       "Slug",
+      "imageUrl",
       "metaTitle",
       "metaDescription",
       "category",
@@ -24,9 +25,10 @@ export const createBlog = async (req: Request, res: Response) => {
         message,
       });
     }
-
+    console.log("Body", req.body)
     const data = new Blog(req.body);
     await data.save();
+    console.log(data)
 
     res.status(201).json({ success: true, blog: data });
   } catch (error) {
@@ -80,4 +82,112 @@ export const GetBlogs = async (req: Request, res: Response) => {
       .status(500)
       .json({ success: false, message: "Internal server error", error: error });
   }
-}; 
+};
+
+export const GetBlogBySlug = async (req: Request, res: Response) => {
+  try {
+    const requiredFields = [
+      "slug",
+    ];
+
+    const { isValid, message } = validateRequiredFields(
+      req.params,
+      requiredFields
+    );
+
+    if (!isValid) {
+      return res.status(400).json({
+        success: false,
+        message,
+      });
+    }
+    const blog = await Blog.findOne({ Slug: req.params.slug });
+    res.status(200).json(blog);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Internal server error", error: error });
+  }
+};
+
+export const GetBlogById = async (req: Request, res: Response) => {
+  try {
+    const requiredFields = [
+      "id",
+    ];
+
+    const { isValid, message } = validateRequiredFields(
+      req.body,
+      requiredFields
+    );
+
+    if (!isValid) {
+      return res.status(400).json({
+        success: false,
+        message,
+      });
+    }
+
+    const blog = await Blog.findById(req.body.id);
+    res.status(200).json(blog);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Internal server error", error: error });
+  }
+};
+
+export const UpdateBlog = async (req: Request, res: Response) => {
+  try {
+    const requiredFields = [
+      "id",
+    ];
+
+    const { isValid, message } = validateRequiredFields(
+      req.body,
+      requiredFields
+    );
+
+    if (!isValid) {
+      return res.status(400).json({
+        success: false,
+        message,
+      });
+    }
+
+    const updateBlog = await Blog.findByIdAndUpdate(req.body.id, req.body, {
+      new: true,
+    });
+    if (!updateBlog) return res.status(404).json({ message: "Blog not found" });
+
+    res.status(200).json(updateBlog);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+export const DeleteBlog = async (req: Request, res: Response) => {
+  try {
+     const requiredFields = [
+      "id",
+    ];
+
+    const { isValid, message } = validateRequiredFields(
+      req.body,
+      requiredFields
+    );
+
+    if (!isValid) {
+      return res.status(400).json({
+        success: false,
+        message,
+      });
+    }
+    const blog = await Blog.findByIdAndDelete(req.body.id);
+    if (!blog) return res.status(404).json({ message: "Blog not found" });
+
+    res.status(204).json({ message: "Blog deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
