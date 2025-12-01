@@ -6,7 +6,7 @@ export const createBlog = async (req: Request, res: Response) => {
   try {
     const requiredFields = [
       "title",
-      "Slug",
+      "slug",
       "imageUrl",
       "metaTitle",
       "metaDescription",
@@ -168,7 +168,7 @@ export const UpdateBlog = async (req: Request, res: Response) => {
 
 export const DeleteBlog = async (req: Request, res: Response) => {
   try {
-     const requiredFields = [
+    const requiredFields = [
       "id",
     ];
 
@@ -189,5 +189,23 @@ export const DeleteBlog = async (req: Request, res: Response) => {
     res.status(204).json({ message: "Blog deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
+  }
+};
+
+export const RecentBlogs = async (req: Request, res: Response) => {
+  try {
+    const blogs = await Blog.find();     
+    res.status(200).json({
+      success: true,
+      data: blogs,
+      message:"data from backend blog"
+    });
+  } catch (error) {
+    console.error("Error fetching recent blogs:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error,
+    });
   }
 };

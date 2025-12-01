@@ -38,10 +38,10 @@ App.use(
         return callback(null, true);
       }
       if (allowedOrigins.includes(origin)) {
-        console.log('Allowed origin:', origin);
+        // console.log('Allowed origin:', origin);
         callback(null, true);
       } else {
-        console.log('Blocked origin:', origin);
+        // console.log('Blocked origin:', origin);
         callback(null, false);
       }
     },
