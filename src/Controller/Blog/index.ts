@@ -89,7 +89,6 @@ export const GetBlogBySlug = async (req: Request, res: Response) => {
     const requiredFields = [
       "slug",
     ];
-
     const { isValid, message } = validateRequiredFields(
       req.params,
       requiredFields
@@ -101,7 +100,7 @@ export const GetBlogBySlug = async (req: Request, res: Response) => {
         message,
       });
     }
-    const blog = await Blog.findOne({ Slug: req.params.slug });
+    const blog = await Blog.findOne({ slug: req.params.slug });
     res.status(200).json(blog);
   } catch (error) {
     res
@@ -192,13 +191,14 @@ export const DeleteBlog = async (req: Request, res: Response) => {
   }
 };
 
-export const RecentBlogs = async (req: Request, res: Response) => {
+export const recentBlog = async (req: Request, res: Response) => {
   try {
-    const blogs = await Blog.find();     
+    const blogs = await Blog.find()
+    // .sort({ _id: -1 })
+    // .limit(6)    
     res.status(200).json({
       success: true,
-      data: blogs,
-      message:"data from backend blog"
+      data: blogs,     
     });
   } catch (error) {
     console.error("Error fetching recent blogs:", error);
