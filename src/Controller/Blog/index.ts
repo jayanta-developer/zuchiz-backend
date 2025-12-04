@@ -139,7 +139,7 @@ export const GetBlogById = async (req: Request, res: Response) => {
 export const UpdateBlog = async (req: Request, res: Response) => {
   try {
     const requiredFields = [
-      "id",
+      "blogId",
     ];
 
     const { isValid, message } = validateRequiredFields(
@@ -153,8 +153,8 @@ export const UpdateBlog = async (req: Request, res: Response) => {
         message,
       });
     }
-
-    const updateBlog = await Blog.findByIdAndUpdate(req.body.id, req.body, {
+    console.log(req.body.id, req.body.data)
+    const updateBlog = await Blog.findByIdAndUpdate(req.body.blogId, req.body, {
       new: true,
     });
     if (!updateBlog) return res.status(404).json({ message: "Blog not found" });
