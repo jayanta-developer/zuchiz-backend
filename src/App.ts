@@ -12,6 +12,8 @@ import BlogRoute from "./Router/blog";
 
 const allowedOrigins = [
   "http://localhost:5173",
+  "https://zuchiz-blog.vercel.app/",
+  "https://zuchiz-blog-bsz23o7yh-jayanta-deys-projects-1a61b44e.vercel.app/"
 ];
 
 
