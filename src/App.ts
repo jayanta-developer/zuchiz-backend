@@ -1,57 +1,49 @@
-import express from 'express';
+import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-dotenv.config();
-const mongoose = require("mongoose");
 import bodyParser from "body-parser";
+import mongoose from "mongoose";
 
-//routes
 import BlogRoute from "./Router/blog";
 
+dotenv.config();
 
+const App = express();
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://zuchiz-blog.vercel.app/",
-  "https://zuchiz-blog-bsz23o7yh-jayanta-deys-projects-1a61b44e.vercel.app/"
+  "https://zuchiz-blog.vercel.app",
+  "https://zuchiz-blog-bsz23o7yh-jayanta-deys-projects-1a61b44e.vercel.app",
 ];
 
-
-//DB
+// DB
 mongoose
-  .connect(process.env.DATABASE, {})
-  .then(() => console.log("Database connected successful!"))
-  .catch((err: any) =>
-    console.log(
-      "Database is not connected to the server, you are offline:",
-      err
-    )
-  );
+  .connect(process.env.DATABASE as string)
+  .then(() => console.log("Database connected successfully"))
+  .catch((err) => console.error("DB connection failed:", err));
 
-
-const App = express();
+// Middleware
 App.use(express.json({ limit: "5mb" }));
 App.use(bodyParser.json());
 App.use(express.urlencoded({ extended: true }));
+
 App.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) {
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
-      if (allowedOrigins.includes(origin)) {
-        // console.log('Allowed origin:', origin);
-        callback(null, true);
-      } else {
-        // console.log('Blocked origin:', origin);
-        callback(null, false);
-      }
+      return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
   })
 );
+
+
+// App.options("*", cors());
+
+// Routes
 App.use("/zuchiz/api", BlogRoute);
-
-
 
 export default App;
