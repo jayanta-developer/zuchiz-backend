@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 
 //Blog
-const { recentBlog, createBlog, GetBlogs, GetBlogBySlug, GetBlogById, UpdateBlog} = require("../Controller/Blog");
+const { recentBlog, createBlog, GetBlogs, GetBlogBySlug, GetBlogById, UpdateBlog,DeleteBlog} = require("../Controller/Blog");
 
 
 //Routes
@@ -12,6 +12,7 @@ router.post("/blogs", GetBlogs);
 router.get("/blog/:slug", GetBlogBySlug);
 router.post("/blog/by-id", GetBlogById);
 router.post("/blog/update", UpdateBlog);
+router.post("/blog/delete",DeleteBlog)
 
 
 
